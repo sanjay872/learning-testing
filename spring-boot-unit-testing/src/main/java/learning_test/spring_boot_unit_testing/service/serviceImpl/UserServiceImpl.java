@@ -34,6 +34,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByName(String name) {
+        Optional<User> userOptional=repository.findByName(name);
+        if(userOptional.isPresent()){
+            return userOptional.get();
+        }
+        throw new RuntimeException("Name not found!");
+    }
+
+    @Override
     public List<User> getAllUser() {
         return repository.findAll();
     }

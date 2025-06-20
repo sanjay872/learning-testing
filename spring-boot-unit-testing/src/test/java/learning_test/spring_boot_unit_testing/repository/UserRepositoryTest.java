@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @DataJpaTest // for spring to pick this up as a file the do JPA testing
-//@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2) // creates in memory database for testing
+@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2) // creates in memory database for testing
 public class UserRepositoryTest {
 
     @Autowired
@@ -28,8 +28,7 @@ public class UserRepositoryTest {
     public void UserRepository_SaveAll_ReturnSavedUser(){
 
         // Arrange
-        User user=new User();
-        user.setName("Sanjay");
+        User user=User.builder().name("Zoro").build();
 
         // Act
         User savedUser=userRepository.save(user);
@@ -40,10 +39,8 @@ public class UserRepositoryTest {
 
     @Test
     public  void UserRepository_GetAll_ReturnMoreThanOneUser(){
-        User user1=new User();
-        User user2=new User();
-        user1.setName("Zoro");
-        user2.setName("Luffy");
+        User user1=User.builder().name("Zoro").build();
+        User user2=User.builder().name("Luffy").build();
 
         userRepository.save(user1);
         userRepository.save(user2);
@@ -56,10 +53,8 @@ public class UserRepositoryTest {
 
     @Test
     public  void UserRepository_GetById_ReturnOneUser(){
-        User user1=new User();
-        User user2=new User();
-        user1.setName("Zoro");
-        user2.setName("Luffy");
+        User user1=User.builder().name("Zoro").build();
+        User user2=User.builder().name("Luffy").build();
 
         User savedUser1=userRepository.save(user1);
         User savedUser2=userRepository.save(user2);
@@ -70,5 +65,13 @@ public class UserRepositoryTest {
             User user=foundUser.get();
             Assertions.assertEquals(user.getName(),user1.getName());
         }
+    }
+
+    @Test
+    public void UserRepository_GetByName_ReturnOneUser(){
+        User user=User.builder().name("Zoro").build();
+
+        Optional<User> foundUser=userRepository.findByName("Zoro");
+        foundUser.ifPresent(value -> Assertions.assertEquals(user.getName(), value.getName()));
     }
 }
